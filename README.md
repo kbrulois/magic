@@ -25,7 +25,9 @@ MAGIC has a few important parameters that play important role the quality of res
 
 3). t = This defines the power to which the Markov matrix is to be raised. This is arguably the most important 		        parameter. A very high t can lead to over-smoothed results while a low t can lead to noisy results. 	                     Therefore, it is crucial to choose an appropriate t. While we propose a data-driven method to choose t in                   the paper, the choice of t can be context-dependent. It is crucial to spend time looking at the data and                     selecting t appropriately. Typically, we recommend t between 3 and 8.
 
-For example Python notebooks, please go inside the notebooks directory and find and example notebook that illustrates in detail the appropriate use of MAGIC.
+For example Python notebooks, please go inside the notebooks directory and open: Magic_single_cell_RNAseq.ipynb
+
+For example MATLAB usage, please go inside the matlab directory and open: 
 
 #### Installation and dependencies for the Python version
 1. The Python3 version of MAGIC can be installed using:
