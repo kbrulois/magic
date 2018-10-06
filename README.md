@@ -19,9 +19,11 @@ MAGIC is an unsupervised non-parametric algorithm to impute and de-noise biologi
 
 MAGIC has a few important parameters that play important role the quality of results. These are listed below:
 
-	1). k = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	                     enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
-	2). ka = This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard 	 	          deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor.                  By default, this is set to ka = k/3 = 10.
-	3). t = This defines the power to which the Markov matrix is to be raised. This is arguably the most important 		        parameter. A very high t can lead to over-smoothed results while a low t can lead to noisy results. 	                     Therefore, it is crucial to choose an appropriate t. While we propose a data-driven method to choose t in                   the paper, the choice of t can be context-dependent. It is crucial to spend time looking at the data and                     selecting t appropriately. Typically, we recommend t between 3 and 8.
+1). k = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	                     enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
+
+2). ka = This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard 	 	          deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor.                  By default, this is set to ka = k/3 = 10.
+
+3). t = This defines the power to which the Markov matrix is to be raised. This is arguably the most important 		        parameter. A very high t can lead to over-smoothed results while a low t can lead to noisy results. 	                     Therefore, it is crucial to choose an appropriate t. While we propose a data-driven method to choose t in                   the paper, the choice of t can be context-dependent. It is crucial to spend time looking at the data and                     selecting t appropriately. Typically, we recommend t between 3 and 8.
 
 #### Installation and dependencies for the Python version
 1. The Python3 version of MAGIC can be installed using:
