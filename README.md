@@ -13,17 +13,17 @@ MAGIC is an unsupervised non-parametric algorithm to impute and de-noise biologi
 
 	1). Constructs a nearest-neighbor graph
 	2). Converts the distance matrix to an affinity matrix, via Gaussian kernel
-	3). Converts the affinity matrix to a Markov matrix, via row normalization
+	3). Converts the affinity matrix to a Markov (or Transition) matrix, via row normalization
 	4). Raises the Markov matrix to a power t, to emulate data diffusion
 	5). The original data is then right-multiplied by the powered Markov matrix 
 
 MAGIC has a few important parameters that play important role the quality of results. These are listed below:
 
-1). $\math{\it{k}}$ = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	                     enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
+1). *k* = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	               enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
 
-2). ka = This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard 	 	          deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor.                  By default, this is set to ka = k/3 = 10.
+2). _ka_ = This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard 	 	                deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor.                  By default, this is set to _ka_ = _k_/3 = 10.
 
-3). t = This defines the power to which the Markov matrix is to be raised. This is arguably the most important 		        parameter. A very high t can lead to over-smoothed results while a low t can lead to noisy results. 	                     Therefore, it is crucial to choose an appropriate t. While we propose a data-driven method to choose t in                   the paper, the choice of t can be context-dependent. It is crucial to spend time looking at the data and                     selecting t appropriately. Typically, we recommend t between 3 and 8.
+3). _t_ = This defines the power to which the Markov matrix is to be raised. This is arguably the most important 		  parameter. A very high _t_ can lead to over-smoothed results while a low _t_ can lead to noisy results. 	               The choice of _t_ can be context-dependent. It is crucial to spend time looking at the data and                             selecting _t_ appropriately. Typically, we recommend _t_ between 3 and 8.
 
 For example Python notebooks, please go inside the notebooks directory and open: Magic_single_cell_RNAseq.ipynb
 
