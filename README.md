@@ -27,7 +27,7 @@ MAGIC has a few important parameters that play important role the quality of res
 
 For example Python notebooks, please go inside the notebooks directory and open: Magic_single_cell_RNAseq.ipynb
 
-For example MATLAB usage, please go inside the matlab directory and open: 
+For example MATLAB usage, please go inside the matlab directory and open: test_magic.m
 
 #### Installation and dependencies for the Python version
 1. The Python3 version of MAGIC can be installed using:
