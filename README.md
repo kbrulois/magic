@@ -29,6 +29,9 @@ For example Python notebooks, please go inside the notebooks directory and open:
 
 For example MATLAB usage, please go inside the matlab directory and open: test_magic.m
 
+For a tutorial on how to use the GUI, please go inside docs and open: magic_tutorial.pptx
+
+
 #### Installation and dependencies for the Python version
 1. The Python3 version of MAGIC can be installed using:
 
