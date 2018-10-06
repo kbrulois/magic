@@ -6,32 +6,6 @@ https://www.ncbi.nlm.nih.gov/pubmed/29961576
 
 MAGIC has been implemented in Python3 and Matlab. See below for installation and Usage.
 
-Overview and how to use MAGIC effectively
--------------------------------------------------------
-
-MAGIC is an unsupervised non-parametric algorithm to impute and de-noise biological single-cell RNA-seq data sets. MAGIC achieves this objective by sharing information across similar cells via data diffusion. Algorithmically, MAGIC performs the following operations in the sequential order:
-
-	1). Constructs a nearest-neighbor graph
-	2). Converts the distance matrix to an affinity matrix, via Gaussian kernel
-	3). Converts the affinity matrix to a Markov (or Transition) matrix, via row normalization
-	4). Raises the Markov matrix to a power t, to emulate data diffusion
-	5). The original data is then right-multiplied by the powered Markov matrix 
-
-MAGIC has a few important parameters that play important role the quality of results. These are listed below:
-
-1). *k* = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	               enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
-
-2). _ka_ = This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard 	 	                deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor.                  By default, this is set to _ka_ = _k_/3 = 10.
-
-3). _t_ = This defines the power to which the Markov matrix is to be raised. This is arguably the most important 		  parameter. A very high _t_ can lead to over-smoothed results while a low _t_ can lead to noisy results. 	               The choice of _t_ can be context-dependent. It is crucial to spend time looking at the data and                             selecting _t_ appropriately. Typically, we recommend _t_ between 3 and 8.
-
-For example Python notebooks, please go inside the notebooks directory and open: Magic_single_cell_RNAseq.ipynb
-
-For example MATLAB usage, please go inside the matlab directory and open: test_magic.m
-
-For a tutorial on how to use the GUI, please go inside docs and open: magic_tutorial.pptx
-
-
 #### Installation and dependencies for the Python version
 1. The Python3 version of MAGIC can be installed using:
 
