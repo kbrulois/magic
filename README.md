@@ -1,10 +1,27 @@
 Markov Affinity-based Graph Imputation of Cells (MAGIC)
 -------------------------------------------------------
-van Dijk, David, et al. "MAGIC: A diffusion-based imputation method reveals gene-gene interactions in single-cell RNA-sequencing data." BioRxiv (2017): 111591.
+Van Dijk, David, et al. "Recovering Gene Interactions from Single-Cell Data Using Data Diffusion." Cell (2018).
 
-http://www.biorxiv.org/content/early/2017/02/25/111591
+https://www.ncbi.nlm.nih.gov/pubmed/29961576
 
-MAGIC has been implemented in Python3 and Matlab.
+MAGIC has been implemented in Python3 and Matlab. See below for installation and Usage.
+
+Overview and how to use MAGIC effectively
+-------------------------------------------------------
+
+MAGIC is an unsupervised non-parametric algorithm to impute and de-noise biological single-cell RNA-seq data sets. MAGIC achieves this objective by sharing information across similar cells via data diffusion. Algorithmically, MAGIC performs the following operations in the sequential order:
+
+	1). Constructs a nearest-neighbor graph
+	2). Converts the distance matrix to an affinity matrix, via Gaussian kernel
+	3). Converts the affinity matrix to a Markov matrix, via row normalization
+	4). Raises the Markov matrix to a power t, to emulate data diffusion
+	5). The original data is then right-multiplied by the powered Markov matrix 
+
+MAGIC has a few important parameters that play important role the quality of results. These are listed below:
+
+	1). k = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	                     enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
+	2). ka = This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard 	 	          deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor.                  By default, this is set to ka = k/3 = 10.
+	3). t = This defines the power to which the Markov matrix is to be raised. This is arguably the most important 		        parameter. A very high t can lead to over-smoothed results while a low t can lead to noisy results. 	                     Therefore, it is crucial to choose an appropriate t. While we propose a data-driven method to choose t in                   the paper, the choice of t can be context-dependent. It is crucial to spend time looking at the data and                     selecting t appropriately. Typically, we recommend t between 3 and 8.
 
 #### Installation and dependencies for the Python version
 1. The Python3 version of MAGIC can be installed using:
@@ -22,6 +39,10 @@ All the dependencies will be automatically installed using the above commands
 		$> sudo -H pip3 install .
 		
 #### Usage
+
+#### Instructions for the Matlab version
+1. run_magic.m -- MAGIC imputation function
+2. test_magic.m -- Shows how to run MAGIC. Also included is a function for loading 10x format data (load_10x.m)
 
 ##### Interactive command line
 A tutorial on MAGIC usage and results visualization for single cell RNA-seq data can be found in this notebook: http://nbviewer.jupyter.org/github/pkathail/magic/blob/develop/notebooks/Magic_single_cell_RNAseq.ipynb
@@ -92,7 +113,3 @@ MAGIC can be run using the command line script `MAGIC.py` with the following par
 		  -e E, --epsilon E	Epsilon parameter for running MAGIC (Default = 1).
 		  -r R, --rescale R	Percentile to rescale data to after running MAGIC
                         		(Default = 99).
-
-#### Instructions for the Matlab version
-1. run_magic.m -- MAGIC imputation function
-2. test_magic.m -- Shows how to run MAGIC. Also included is a function for loading 10x format data (load_10x.m)
