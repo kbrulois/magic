@@ -19,7 +19,7 @@ MAGIC is an unsupervised non-parametric algorithm to impute and de-noise biologi
 
 MAGIC has a few important parameters that play important role the quality of results. These are listed below:
 
-1). k = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	                     enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
+1). \math{\it{k}} = This defines the number of nearest neighbor used to construct the graph. We recommend this to be small 	                     enough that only local neighborhood of each cell is considered but big enough that that graph remains                       connected. By default, this is set to k = 30.
 
 2). ka = This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard 	 	          deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor.                  By default, this is set to ka = k/3 = 10.
 
