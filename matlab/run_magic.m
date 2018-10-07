@@ -129,8 +129,8 @@ W = bsxfun(@rdivide, W, sum(W,2)); % Markov normalization
 
 W = full(W);
 
- disp 'Computing optimal t'
 if t == 0
+    disp 'Computing optimal t'
     [~, t]  = compute_optimal_t(data, W);
 end
 
