@@ -1,4 +1,4 @@
-function data_imputed = run_magic(data, t, varargin)
+function data_imputed = run_magic(data, varargin)
 % MAGIC (Markov Affinity-based Graph Imputation of Cells)
 % data must have cells on the rows and genes on the columns
 % t is diffusion time
@@ -27,6 +27,8 @@ epsilon = 1;
 lib_size_norm = true;
 log_transform = false;
 pseudo_count = 0.1;
+t = 0;   % We will compute optimal t below. This is just to initialize t
+
 
 % get the input parameters
 if ~isempty(varargin)
@@ -62,6 +64,10 @@ if ~isempty(varargin)
         % pseudo count for log transform
         if strcmp(varargin{j}, 'pseudo_count')
             pseudo_count = varargin{j+1};
+        end
+        % optimal time
+        if strcmp(varargin{j}, 't')
+            t = varargin{j+1};
         end
     end
 end
@@ -121,6 +127,11 @@ W = bsxfun(@rdivide, W, sum(W,2)); % Markov normalization
 
 W = full(W);
 
+ disp 'Computing optimal t'
+if t == 0
+    [~, t]  = compute_optimal_t(data, W);
+end
+
 disp(['Diffusing for ' num2str(t) ' steps']);
 W_t = W^t; % diffuse
 
@@ -145,3 +156,65 @@ if rescale_to > 0
 end
 
 disp 'done'
+
+
+function [data_opt_t, t_opt]  = compute_optimal_t(data, DiffOp, varargin)
+
+t_max = 10;
+make_plot = true;
+th = 1e-3;
+data_opt_t = [];
+
+if ~isempty(varargin)
+    for j = 1:length(varargin)
+        if strcmp(varargin{j}, 't_max')
+            t_max = varargin{j+1};
+        end
+        if strcmp(varargin{j}, 'make_plot')
+            make_plot = varargin{j+1};
+        end
+        if strcmp(varargin{j}, 'th')
+            th = varargin{j+1};
+        end
+    end
+end
+
+data_prev = data;
+if make_plot
+    error_vec = nan(t_max,1);
+    for I=1:t_max
+        disp(['Testing: t = ' num2str(I)]);
+        data_curr = DiffOp * data_prev;
+        error_vec(I) = procrustes(data_prev, data_curr);
+        if error_vec(I) < th && isempty(data_opt_t)
+            data_opt_t = data_curr;
+        end
+        data_prev = data_curr;
+    end
+    t_opt = find(error_vec < th, 1, 'first');
+    
+    figure;
+    hold all;
+    plot(1:t_max, error_vec, '*-');
+    plot(t_opt, error_vec(t_opt), 'or', 'markersize', 10);
+    xlabel 't'
+    ylabel 'error'
+    axis tight
+    ylim([0 ceil(max(error_vec)*10)/10]);
+    plot(xlim, [th th], '--k');
+    legend({'y' 'optimal t' ['y=' num2str(th)]});
+    set(gca,'xtick',1:t_max);
+    set(gca,'ytick',0:0.1:1);
+else
+    for I=1:t_max
+        disp(['t = ' num2str(I)]);
+        data_curr = DiffOp * data_prev;
+        error = procrustes(data_prev, data_curr);
+        if error < th
+            t_opt = I;
+            data_opt_t = data_curr;
+            break
+        end
+        data_prev = data_curr;
+    end
+end
