@@ -11,6 +11,8 @@ function data_imputed = run_magic(data, varargin)
 %       epsilon
 %   'k' (default = 30)
 %       k of kNN graph
+%   't' (default = computed automatically)
+%       the number of time to power the Markov matrix
 %   'epsilon' (default = 1)
 %       kernel bandwith, if epsilon = 0 kernel will be uniform, i.e.
 %       unweighted kNN graph (ka will be ignored)
