@@ -6,6 +6,31 @@ https://www.ncbi.nlm.nih.gov/pubmed/29961576
 
 MAGIC has been implemented in Python3 and Matlab. See below for installation and Usage.
 
+
+Overview and how to use MAGIC effectively
+-------------------------------------------------------
+MAGIC is an unsupervised non-parametric algorithm to impyte and de-noise biological single-cell RNA-seq data sets. MAGIC achieves this objective by sharing information across similar cells via data diffusion. Algorithmically, MAGIC performs the following operations in the sequential order:
+
+	1). Constructs a nearest-neighbor graph
+	2). Converts the distance matrix to an affinity matrix, via a Gaussian kernel
+	3). Converts the affinity matrix to a Markov (or Transition) matrix, via row normalization
+	4). Raises the Markov matrix to a power t, to emulate data diffusion
+	5). The original data is then right-multiplied by the powered Markov matrix
+	
+MAGIC has a few important parameters that play important rolw to determine the quality of results. They are listed below:
+
+1). _k_ : This defines the number of nearest neighbors used to construct the graph. We recomment this to be small enough that only local neighborhood of each cell is considered but big enough that the graph remains connected. By default, this is set to k  = 30.
+
+2). _ka_ : This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor. By default, this is set to _ka_ = _k_/3 = 10.
+
+3). _t_ : This defines the power to which the Markov matrix is to be raised. This is arguably the most important parameter. A very high _t_ can lead to over-smoothed results while a low _t_ can lead to noisy results. We provide an automatic way to detect _t_ in the paper. For this, we compute the degree of change between the imputed data at time _t_ and time _t-1_ and stop after this value stabilizes. With the increase in _t_, the data goes through a rapidly changing imputation regime followed by a smoothing regime. In the imputation regime, the diffusion learns the manifold structure and removes noise. At larger values of _t_, diffusing further would smooth out real biology. The knee-point determines an optimal _t_. However, the choice of _t_ can be context-dependent. While the automatic method can act as a good guide to choose optimal _t_, the underlying mathematics may not always recapitulate the true biology. Therefore, we always recommend to spend time looking at the data and to vet the values of _t_ accordingly. For more details on the method please view run_magic.m file inside matlab directory above. 
+
+For example Python notebooks, please go inside the notebooks directory and open: Magic_single_cell_RNAseq.ipynb
+
+For example MATLAb usage, please go inside the notebooks directory and open: test_magic.m
+
+For a tutorial on how to use the GUI, please go inside docs and open: magic_tutorial.pptx
+
 #### Installation and dependencies for the Python version
 1. The Python3 version of MAGIC can be installed using:
 
