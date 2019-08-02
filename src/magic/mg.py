@@ -305,7 +305,7 @@ class SCData:
             raise RuntimeError('data_type must be either sc-seq or masscyt')
 
         # Read in csv file
-        df = pd.DataFrame.from_csv( counts_csv_file, sep=delimiter)
+        df = pd.read_csv( counts_csv_file, sep=delimiter)
 
         df.drop(df.index[1:rows_after_header_to_skip+1], axis=0, inplace=True)
         df.drop(df.columns[1:cols_after_header_to_skip+1],axis=1, inplace=True)
@@ -1148,9 +1148,9 @@ class SCData:
         return fig, axes
 
 
-    def run_magic(self, n_pca_components=20, random_pca=True, t=6, k=30, ka=10, epsilon=1, rescale_percent=99):
+    def run_magic(self, aff_mat_input=None, n_pca_components=20, random_pca=True, t=6, k=30, ka=10, epsilon=1, rescale_percent=99):
 
-        new_data = magic.MAGIC_core.magic(self.data.values, n_pca_components=n_pca_components, random_pca=random_pca, t=t, 
+        new_data = magic.MAGIC_core.magic(self.data.values, aff_mat_input=aff_mat_input, n_pca_components=n_pca_components, random_pca=random_pca, t=t, 
                                      k=k, ka=ka, epsilon=epsilon, rescale=rescale_percent)
 
         new_data = pd.DataFrame(new_data, index=self.data.index, columns=['MAGIC ' + gene for gene in self.data.columns.values])

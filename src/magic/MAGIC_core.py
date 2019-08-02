@@ -7,17 +7,18 @@ from sklearn.decomposition import PCA
 from scipy.spatial.distance import squareform
 from sklearn.neighbors import NearestNeighbors
 
-def magic(data, n_pca_components=20, random_pca=True, 
+def magic(data, aff_mat_input, n_pca_components=20, random_pca=True, 
           t=6, k=30, ka=10, epsilon=1, rescale=99):
 
-    if n_pca_components != None:
+    if not isinstance(aff_mat_input, pd.DataFrame):
         print('doing PCA')
-        pca_projected_data = run_pca(data, n_components=n_pca_components, random=random_pca)
+        affin_mat_input = run_pca(data, n_components=n_pca_components, random=random_pca)
     else:
-        pca_projected_data = data
+        print('using user-supplied dimensional reduction')
+        affin_mat_input = aff_mat_input
 
     #run diffusion maps to get markov matrix
-    L = compute_markov(pca_projected_data, k=k, epsilon=epsilon, 
+    L = compute_markov(affin_mat_input, k=k, epsilon=epsilon, 
                        distance_metric='euclidean', ka=ka)
 
     #remove tsne kernel for now

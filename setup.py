@@ -27,8 +27,7 @@ setup(name='magic',
           'statsmodels',
           'tables'
       ],
-      scripts=['src/magic/magic_gui.py',
-               'src/magic/MAGIC.py'],
+      scripts=['src/magic/MAGIC.py'],
       )
 
 

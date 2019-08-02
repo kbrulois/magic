@@ -4,6 +4,7 @@ import os
 import sys
 import argparse
 import numpy as np 
+import pandas as pd
 
 import magic
 
@@ -15,15 +16,17 @@ class NewArgumentParser(argparse.ArgumentParser):
 		print(message)
 		sys.exit(0)
 
+
 def parse_args(args):
 	p = NewArgumentParser(description='run MAGIC')
-	p.add_argument('filetype',
-                   choices=['csv', '10x', '10x_HDF5', 'mtx'],
-                   help='what is the file type of your original data?')
+	p.add_argument('filetype', choices=['csv', '10x', '10x_HDF5', 'mtx'],
+					help='what is the file type of your original data?')
 
 	a = p.add_argument_group('data loading parameters')
 	a.add_argument('-d', '--data-file', metavar='D', required=True,
-                   help='File path of input data file.')
+					help='File path of input data file.')
+	a.add_argument('-a', '--aff_mat_input_data_file', metavar='A', 
+					help='File path of affinity matrix input data file.')
 	a.add_argument('-o', '--output-file', metavar='O', required=True,
 				   help='File path of where to save the MAGIC imputed data (in csv format).')
 	a.add_argument('-g', '--genome', metavar='G',
@@ -74,7 +77,7 @@ def parse_args(args):
 
 def main(args: list = None):
 	args = parse_args(args)
-
+	print(args)
 	try:
 		if args.filetype == 'csv':
 			scdata = magic.mg.SCData.from_csv(os.path.expanduser(args.data_file), 
@@ -101,7 +104,15 @@ def main(args: list = None):
 		if args.log_transform != None:
 			scdata.log_transform_scseq_data(pseudocount=args.log_transform)
 
-		scdata.run_magic(n_pca_components=args.pca_components, random_pca=args.pca_non_random, t=args.t,
+		if args.aff_mat_input_data_file != None:
+			aff_mat_input_data = pd.read_csv(args.aff_mat_input_data_file, sep=',')
+		
+			aff_mat_input_data.set_index(list(aff_mat_input_data.columns[[0]]), inplace=True)
+				
+			scdata.run_magic(aff_mat_input = aff_mat_input_data, n_pca_components=args.pca_components, random_pca=args.pca_non_random, t=args.t,
+						 k=args.k, ka=args.ka, epsilon=args.epsilon, rescale_percent=args.rescale)
+		else: 
+			scdata.run_magic(n_pca_components=args.pca_components, random_pca=args.pca_non_random, t=args.t,
 						 k=args.k, ka=args.ka, epsilon=args.epsilon, rescale_percent=args.rescale)
 
 		scdata.magic.to_csv(os.path.expanduser(args.output_file))
