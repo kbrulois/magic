@@ -104,5 +104,5 @@ MAGIC can be run using the command line script `MAGIC.py` with the following par
 ##### Installation and dependencies for the R version
 The R version can be installed using:
     install.packages("devtools")
-    devtools::install_github("kbrulois/magic")
+    devtools::install_github("kbrulois/magic", ref = "magicBatch")
 
