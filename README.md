@@ -62,7 +62,8 @@ MAGIC can be run using the command line script `MAGIC.py` with the following par
 
 		data loading parameters:
 		  -d D, --data-file D   File path of input data file.
-           -a A, --aff_mat_input_data_file A File path of affinity matrix input data file.
+            -a A, --aff_mat_input_data_file A 
+                                 File path of affinity matrix input data file.
 		  -o O, --output-file O
 		                        File path of where to save the MAGIC imputed data (in
 		                        csv format).
@@ -103,6 +104,7 @@ MAGIC can be run using the command line script `MAGIC.py` with the following par
                         		(Default = 99).
 ##### Installation and dependencies for the R version
 The R version can be installed using:
-    install.packages("devtools")
-    devtools::install_github("kbrulois/magic", ref = "magicBatch")
+                        
+                        install.packages("devtools")
+                        devtools::install_github("kbrulois/magic", ref = "magicBatch")
 
