@@ -1,11 +1,10 @@
 Markov Affinity-based Graph Imputation of Cells (MAGIC)
 -------------------------------------------------------
-Van Dijk, David, et al. "Recovering Gene Interactions from Single-Cell Data Using Data Diffusion." Cell (2018).
+MAGIC is an imputation algorthm developed by Van Dijk, David, et al. "Recovering Gene Interactions from Single-Cell Data Using Data Diffusion." Cell (2018).
 
 https://www.ncbi.nlm.nih.gov/pubmed/29961576
 
-MAGIC has been implemented in Python3 and Matlab. See below for installation and Usage.
-
+This is forked and modified from dpeerlab/magic. Removed support for the matlab version and the python gui. Added an R version and support for imputation across multiple batches. See below for installation and Usage.
 
 Overview and how to use MAGIC effectively
 -------------------------------------------------------
@@ -23,18 +22,12 @@ MAGIC has a few important parameters that play important rolw to determine the q
 
 2). _ka_ : This dictates the standard deviation to be used in the Gaussian kernel. To elaborate, the standard deviation in the Gaussian kernel for a given cell is set to be the distance to it's ka-th nearest neighbor. By default, this is set to _ka_ = _k_/3 = 10.
 
-3). _t_ : This defines the power to which the Markov matrix is to be raised. This is arguably the most important parameter. A very high _t_ can lead to over-smoothed results while a low _t_ can lead to noisy results. We provide an automatic way to detect _t_ in the paper. For this, we compute the degree of change between the imputed data at time _t_ and time _t-1_ and stop after this value stabilizes. With the increase in _t_, the data goes through a rapidly changing imputation regime followed by a smoothing regime. In the imputation regime, the diffusion learns the manifold structure and removes noise. At larger values of _t_, diffusing further would smooth out real biology. The knee-point determines an optimal _t_. However, the choice of _t_ can be context-dependent. While the automatic method can act as a good guide to choose optimal _t_, the underlying mathematics may not always recapitulate the true biology. Therefore, we always recommend to spend time looking at the data and to vet the values of _t_ accordingly. For more details on the method please view run_magic.m file inside matlab directory above. 
-
-For example Python notebooks, please go inside the notebooks directory and open: Magic_single_cell_RNAseq.ipynb
-
-For example MATLAb usage, please go inside the notebooks directory and open: test_magic.m
-
-For a tutorial on how to use the GUI, please go inside docs and open: magic_tutorial.pptx
+3). _t_ : This defines the power to which the Markov matrix is to be raised. This is arguably the most important parameter. A very high _t_ can lead to over-smoothed results while a low _t_ can lead to noisy results. We provide an automatic way to detect _t_ in the paper. For this, we compute the degree of change between the imputed data at time _t_ and time _t-1_ and stop after this value stabilizes. With the increase in _t_, the data goes through a rapidly changing imputation regime followed by a smoothing regime. In the imputation regime, the diffusion learns the manifold structure and removes noise. At larger values of _t_, diffusing further would smooth out real biology. The knee-point determines an optimal _t_. However, the choice of _t_ can be context-dependent. While the automatic method can act as a good guide to choose optimal _t_, the underlying mathematics may not always recapitulate the true biology. Therefore, we always recommend to spend time looking at the data and to vet the values of _t_ accordingly. 
 
 #### Installation and dependencies for the Python version
-1. The Python3 version of MAGIC can be installed using:
+1. This Python3 version of MAGIC can be installed using:
 
-        $> git clone git://github.com/pkathail/magic.git
+        $> https://github.com/kbrulois/magic.git
         $> cd magic
         $> sudo -H pip3 install .
 
@@ -46,20 +39,6 @@ All the dependencies will be automatically installed using the above commands
 		$> sudo -H pip3 uninstall magic
 		$> sudo -H pip3 install .
 		
-#### Usage
-
-#### Instructions for the Matlab version
-1. run_magic.m -- MAGIC imputation function
-2. test_magic.m -- Shows how to run MAGIC. Also included is a function for loading 10x format data (load_10x.m)
-
-##### Interactive command line
-A tutorial on MAGIC usage and results visualization for single cell RNA-seq data can be found in this notebook: http://nbviewer.jupyter.org/github/pkathail/magic/blob/develop/notebooks/Magic_single_cell_RNAseq.ipynb
-
-
-##### GUI
-A python GUI is now available for MAGIC. After following the installation steps listed below, the GUI can be invoked using
-
-        $> magic_gui.py
 
 ##### Command line script
 MAGIC can be run using the command line script `MAGIC.py` with the following parameters:
@@ -83,6 +62,7 @@ MAGIC can be run using the command line script `MAGIC.py` with the following par
 
 		data loading parameters:
 		  -d D, --data-file D   File path of input data file.
+           -a A, --aff_mat_input_data_file A File path of affinity matrix input data file.
 		  -o O, --output-file O
 		                        File path of where to save the MAGIC imputed data (in
 		                        csv format).
@@ -121,3 +101,8 @@ MAGIC can be run using the command line script `MAGIC.py` with the following par
 		  -e E, --epsilon E	Epsilon parameter for running MAGIC (Default = 1).
 		  -r R, --rescale R	Percentile to rescale data to after running MAGIC
                         		(Default = 99).
+##### Installation and dependencies for the R version
+The R version can be installed using:
+    install.packages("devtools")
+    devtools::install_github("kbrulois/magic")
+
