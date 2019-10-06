@@ -29,10 +29,21 @@ magicBatch(data, aff_mat_input = NULL, pca = 20, t = 2,
 
 \item{python_command}{A character string passed to the "command" arugment of the system2 function in order to invoke python.}
 }
+\value{
+A \code{list} that includes the following elements:
+\describe{
+  \item{imputed_data}{A cell by gene \code{matrix} of the imputed gene expression values.}
+  \item{diffusion_map}{A cell by diffusion map component \code{matrix}.}
+  \item{affinity_matrix}{A cell by cell \code{matrix} of the unpowered markov affinity matrix.}
+}
+}
 \description{
 This is an R wrapper for the orginal python implementation of the Marcov Affinity-based Graph Imputation of Cells (MAGIC) algorithm as described in 
 Van Dijk, David et al. The default behavior of the orginal python implementation is slightly different and sometimes preferable to the existing R 
 implementation of MAGIC (Rmagic::magic). magicBatch also includes support for imputation across multiple batches: the optional aff_mat_input argument
 allows the user to pass any low-dimensional representation of the data, including batch-corrected data, directly to the calculation of the powered marcov 
 affinity matrix, resulting in cross-batch imputation that preserves batch-specific differences.
+}
+\author{
+Kevin Brulois
 }

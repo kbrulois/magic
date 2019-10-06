@@ -19,6 +19,14 @@
 #' @param rescale Percentile to rescale data to after imputation
 #' @param n_diffusion_components Number of diffusion map components to compute.
 #' @param python_command A character string passed to the "command" arugment of the system2 function in order to invoke python.
+#' @return A \code{list} that includes the following elements:
+#' \describe{
+#'   \item{imputed_data}{A cell by gene \code{matrix} of the imputed gene expression values.}
+#'   \item{diffusion_map}{A cell by diffusion map component \code{matrix}.}
+#'   \item{affinity_matrix}{A cell by cell \code{matrix} of the unpowered markov affinity matrix.}
+#' }
+#'
+#' @author Kevin Brulois
 #' @export
 
 magicBatch <- function(data,
