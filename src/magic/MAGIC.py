@@ -62,17 +62,19 @@ def parse_args(args):
 				   help='Number of pca components to use when running MAGIC (Default = 20).')
 	m.add_argument('--pca-non-random', default=True, action='store_false',
 				    help='Do not used randomized solver in PCA computation.')
-	m.add_argument('-t', metavar='T', default=6, type=int,
-					help='t parameter for running MAGIC (Default = 6).')
-	m.add_argument('-k', metavar='K', default=30, type=int,
-					help='Number of nearest neighbors to use when running MAGIC (Default = 30).')
-	m.add_argument('-ka', metavar='KA', default=10, type=int,
-					help='knn-autotune parameter for running MAGIC (Default = 10).')
+	m.add_argument('-t', metavar='T', default=2, type=int,
+					help='t parameter for running MAGIC (Default = 2).')
+	m.add_argument('-k', metavar='K', default=9, type=int,
+					help='Number of nearest neighbors to use when running MAGIC (Default = 9).')
+	m.add_argument('-ka', metavar='KA', default=3, type=int,
+					help='knn-autotune parameter for running MAGIC (Default = 3).')
 	m.add_argument('-e', '--epsilon', metavar='E', default=1, type=int,
 					help='Epsilon parameter for running MAGIC (Default = 1).')
-	m.add_argument('-r', '--rescale', metavar='R', default=99, type=int,
-					help='Percentile to rescale data to after running MAGIC (Default = 99).')
-	m.add_argument('-c', '--n_diffusion_components', metavar='C', default=10, type=int,
+	m.add_argument('-r', '--rescale', metavar='R', default=0, type=int,
+					help='Percentile to rescale data to after running MAGIC (Default = 0).')
+
+	w = p.add_argument_group('Diffusion Map parameters')
+	w.add_argument('-c', '--n_diffusion_components', metavar='C', default=10, type=int,
 					help='Number of diffusion map components to calculate (Default = 10).')
 
 	try:

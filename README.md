@@ -4,7 +4,7 @@ MAGIC is an imputation algorthm developed by Van Dijk, David, et al. "Recovering
 
 https://www.ncbi.nlm.nih.gov/pubmed/29961576
 
-This is forked and modified from dpeerlab/magic. Removed support for the matlab version and the python gui. Added an R version and support for imputation across multiple batches. See below for installation and Usage.
+This repo is forked and modified from dpeerlab/magic. It includes some additional features: an R wrapper and support for imputation across multiple batches. It lacks support for the matlab version and the python gui. See below for installation and Usage. 
 
 Overview and how to use MAGIC effectively
 -------------------------------------------------------
@@ -44,64 +44,75 @@ All the dependencies will be automatically installed using the above commands
 MAGIC can be run using the command line script `MAGIC.py` with the following parameters:
 
 		$> MAGIC.py -h
-		usage: MAGIC.py [-h] -d D -o O [-g G] [--gene-name-file GN]
-        		        [--use-ensemble-ids] [--cell-axis CA] [--skip-rows SKIP_ROWS]
-                		[--skip-columns SKIP_COLUMNS] [-n] [-l L]
-                		[--mols-per-cell-min MOLS_PER_CELL_MIN]
-                		[--mols-per-cell-max MOLS_PER_CELL_MAX] [-p P]
-                		[--pca-non-random] [-t T] [-k K] [-ka KA] [-e E] [-r R]
-                		{csv,10x,10x_HDF5,mtx}
-		
+		usage: MAGIC.py [-h] -d D [-a A] -o O -q Q -s S [-g G] [--gene-name-file GN]
+                [--use-ensemble-ids] [--cell-axis CA] [--skip-rows SKIP_ROWS]
+                [--skip-columns SKIP_COLUMNS] [-n] [-l L]
+                [--mols-per-cell-min MOLS_PER_CELL_MIN]
+                [--mols-per-cell-max MOLS_PER_CELL_MAX] [-p P]
+                [--pca-non-random] [-t T] [-k K] [-ka KA] [-e E] [-r R] [-c C]
+                {csv,10x,10x_HDF5,mtx}
+
 		run MAGIC
 
-		positional arguments:
-		  {csv,10x,mtx}         what is the file type of your original data?
+		positional arguments: {csv,10x,10x_HDF5,mtx}
+                        what is the file type of your original data?
 
 		optional arguments:
-		  -h, --help            show this help message and exit
+  		-h, --help            show this help message and exit
 
 		data loading parameters:
-		  -d D, --data-file D   File path of input data file.
-            -a A, --aff_mat_input_data_file A 
-                                 File path of affinity matrix input data file.
-		  -o O, --output-file O
-		                        File path of where to save the MAGIC imputed data (in
-		                        csv format).
-		  -g G, --genome G      Genome must be specified when loading 10x_HDF5 data.
-		  --gene-name-file GN   Gene name file must be specified when loading mtx
-		                        data.
-		  --use-ensemble-ids    Use ensemble IDs instead of gene names.
-		  --cell-axis CA        When loading a csv, specify whether cells are on rows
-		                        or columns (Default = 'rows').
-		  --skip-rows SKIP_ROWS
-		                        When loading a csv, number of rows to skip after the
-		                        header row (Default = 0).
-		  --skip-columns SKIP_COLUMNS
-		                        When loading a csv, number of columns to skip after
-		                        the header columns (Default = 0).
-		
+  		-d D, --data-file D   File path of input data file.
+  		-a A, --aff_mat_input_data_file A
+                        File path of affinity matrix input data file.
+  		-o O, --output-file O
+                        File path of where to save the MAGIC imputed data (in
+                        csv format).
+  		-q Q, --output-file2 Q
+                        File path of where to save the diffusion map data (in
+                        csv format).
+  		-s S, --output-file3 S
+                        File path of where to save the markov affinity matrix
+                        (in csv format).
+  		-g G, --genome G      Genome must be specified when loading 10x_HDF5 data.
+  		--gene-name-file GN   Gene name file must be specified when loading mtx
+                        data.
+  		--use-ensemble-ids    Use ensemble IDs instead of gene names.
+  		--cell-axis CA        When loading a csv, specify whether cells are on rows
+                        or columns (Default = 'rows').
+ 		 --skip-rows SKIP_ROWS
+                        When loading a csv, number of rows to skip after the
+                        header row (Default = 0).
+ 		 --skip-columns SKIP_COLUMNS
+                        When loading a csv, number of columns to skip after
+                        the header columns (Default = 0).
+
 		normalization/filtering parameters:
-		  -n, --no-normalize    Do not perform library size normalization on the data
-		  -l L, --log-transform L
-		                        Log-transform data with the specified pseudocount.
-		  --mols-per-cell-min MOLS_PER_CELL_MIN
-		                        Minimum molecules/cell to use in filtering.
-		  --mols-per-cell-max MOLS_PER_CELL_MAX
-		                        Maximum molecules/cell to use in filtering.
+  		-n, --no-normalize    Do not perform library size normalization on the data
+  		-l L, --log-transform L
+                        Log-transform data with the specified pseudocount.
+ 		 --mols-per-cell-min MOLS_PER_CELL_MIN
+                        Minimum molecules/cell to use in filtering.
+ 		 --mols-per-cell-max MOLS_PER_CELL_MAX
+                        Maximum molecules/cell to use in filtering.
 
 		MAGIC parameters:
-		  -p P, --pca-components P
-		                        Number of pca components to use when running MAGIC
-		                        (Default = 20).
-		  --pca-non-random      Do not used randomized solver in PCA computation.
-		  -t T			t parameter for running MAGIC (Default = 6).
-		  -k K			Number of nearest neighbors to use when running MAGIC
-                        		(Default = 30).
-		  -ka KA		knn-autotune parameter for running MAGIC (Default =
-                        		10).
-		  -e E, --epsilon E	Epsilon parameter for running MAGIC (Default = 1).
-		  -r R, --rescale R	Percentile to rescale data to after running MAGIC
-                        		(Default = 99).
+ 		 -p P, --pca-components P
+                        Number of pca components to use when running MAGIC
+                        (Default = 20).
+ 		 --pca-non-random      Do not used randomized solver in PCA computation.
+  		 -t T                  t parameter for running MAGIC (Default = 2).
+  		 -k K                  Number of nearest neighbors to use when running MAGIC
+                        (Default = 9).
+  		 -ka KA                knn-autotune parameter for running MAGIC (Default =
+                        3).
+  		 -e E, --epsilon E     Epsilon parameter for running MAGIC (Default = 1).
+  		 -r R, --rescale R     Percentile to rescale data to after running MAGIC
+                        (Default = 0).
+
+		Diffusion Map parameters:
+  		-c C, --n_diffusion_components C
+                        Number of diffusion map components to calculate
+                        (Default = 10).
 ##### Installation and dependencies for the R version
 The R version can be installed using:
                         

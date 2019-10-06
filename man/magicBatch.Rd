@@ -4,31 +4,33 @@
 \alias{magicBatch}
 \title{Impute data using the MAGIC algorithm}
 \usage{
-magicBatch(data, aff_mat_input = NULL, mag_pca = 20, mag_t = 2,
-  mag_k = 9, mag_ka = 3, mag_epsilon = 1, mag_rescale = 99,
-  python_command = "python3")
+magicBatch(data, aff_mat_input = NULL, pca = 20, t = 2,
+  n_diffusion_components = 10, k = 9, ka = 3, epsilon = 1,
+  rescale = 0, python_command = "python3")
 }
 \arguments{
 \item{data}{An expression matrix where cells correspond to rows and genes correspond to columns}
 
 \item{aff_mat_input}{A matrix where cells correspond to rows and components correspond to columns. If left unspecified, the affinity matrix calculation is initialized with PCA as in the original implementation.}
 
-\item{mag_pca}{An integer specifying the number of PCA components that should be used}
+\item{pca}{An integer specifying the number of PCA components that should be used}
 
-\item{mag_t}{The power to which the marcov matrix is to be raised}
+\item{t}{The power to which the marcov matrix is to be raised}
 
-\item{mag_k}{The number of nearest neighbors used to construct the knn graph}
+\item{n_diffusion_components}{Number of diffusion map components to compute.}
 
-\item{mag_ka}{This controls the standard deviation used in the Gaussian kernel width for a given cell, which is set to the distance to the ka-th nearest neighbor.}
+\item{k}{The number of nearest neighbors used to construct the knn graph}
 
-\item{mag_epsilon}{Epsilon parameter used in MAGIC}
+\item{ka}{This controls the standard deviation used in the Gaussian kernel width for a given cell, which is set to the distance to the ka-th nearest neighbor.}
 
-\item{mag_rescale}{Percentile to rescale data to after imputation}
+\item{epsilon}{Epsilon parameter used in MAGIC}
+
+\item{rescale}{Percentile to rescale data to after imputation}
 
 \item{python_command}{A character string passed to the "command" arugment of the system2 function in order to invoke python.}
 }
 \description{
-This is an R interface for the orginal python implementation of the Marcov Affinity-based Graph Imputation of Cells (MAGIC) algorithm as described in 
+This is an R wrapper for the orginal python implementation of the Marcov Affinity-based Graph Imputation of Cells (MAGIC) algorithm as described in 
 Van Dijk, David et al. The default behavior of the orginal python implementation is slightly different and sometimes preferable to the existing R 
 implementation of MAGIC (Rmagic::magic). magicBatch also includes support for imputation across multiple batches: the optional aff_mat_input argument
 allows the user to pass any low-dimensional representation of the data, including batch-corrected data, directly to the calculation of the powered marcov 

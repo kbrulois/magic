@@ -15,8 +15,8 @@ License: GPL (>= 2)
 Imports:
 	data.table
 Suggests:
-	scran
-	batchelor
+	scran,
+	batchelor,
 	ggplot2
 Depends: R (>= 3.6.0)
 Encoding: UTF-8
