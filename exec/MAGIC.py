@@ -29,6 +29,10 @@ def parse_args(args):
 					help='File path of affinity matrix input data file.')
 	a.add_argument('-o', '--output-file', metavar='O', required=True,
 				   help='File path of where to save the MAGIC imputed data (in csv format).')
+	a.add_argument('-q', '--output-file2', metavar='Q', required=True,
+				   help='File path of where to save the diffusion map data (in csv format).')
+	a.add_argument('-s', '--output-file3', metavar='S', required=True,
+				   help='File path of where to save the markov affinity matrix (in csv format).')
 	a.add_argument('-g', '--genome', metavar='G',
 					help='Genome must be specified when loading 10x_HDF5 data.')
 	a.add_argument('--gene-name-file', metavar='GN', 
@@ -68,6 +72,8 @@ def parse_args(args):
 					help='Epsilon parameter for running MAGIC (Default = 1).')
 	m.add_argument('-r', '--rescale', metavar='R', default=99, type=int,
 					help='Percentile to rescale data to after running MAGIC (Default = 99).')
+	m.add_argument('-c', '--n_diffusion_components', metavar='C', default=10, type=int,
+					help='Number of diffusion map components to calculate (Default = 10).')
 
 	try:
 		return p.parse_args(args)
@@ -110,13 +116,19 @@ def main(args: list = None):
 			aff_mat_input_data.set_index(list(aff_mat_input_data.columns[[0]]), inplace=True)
 				
 			scdata.run_magic(aff_mat_input = aff_mat_input_data, n_pca_components=args.pca_components, random_pca=args.pca_non_random, t=args.t,
-						 k=args.k, ka=args.ka, epsilon=args.epsilon, rescale_percent=args.rescale)
+						 k=args.k, ka=args.ka, epsilon=args.epsilon, rescale_percent=args.rescale, n_diffusion_components=args.n_diffusion_components, output_file3 = args.output_file3)
 		else: 
 			scdata.run_magic(n_pca_components=args.pca_components, random_pca=args.pca_non_random, t=args.t,
-						 k=args.k, ka=args.ka, epsilon=args.epsilon, rescale_percent=args.rescale)
+						 k=args.k, ka=args.ka, epsilon=args.epsilon, rescale_percent=args.rescale, n_diffusion_components=args.n_diffusion_components, output_file3 = args.output_file3)
 
 		scdata.magic.to_csv(os.path.expanduser(args.output_file))
-
+		
+		scdata.extended_data.to_csv(os.path.expanduser(args.output_file2))
+		
+		#scdata.diffusion_eigenvectors.to_csv(os.path.expanduser(args.output_file3))
+		
+		
+		
 	except:
 		raise
 
