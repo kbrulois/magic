@@ -27,7 +27,7 @@ MAGIC has a few important parameters that play important rolw to determine the q
 #### Installation and dependencies for the Python version
 1. This Python3 version of MAGIC can be installed using:
 
-        $> https://github.com/kbrulois/magic.git
+        $> git clone https://github.com/kbrulois/magic.git
         $> cd magic
         $> sudo -H pip3 install .
 
@@ -105,6 +105,6 @@ MAGIC can be run using the command line script `MAGIC.py` with the following par
 ##### Installation and dependencies for the R version
 The R version can be installed using:
                         
-                        install.packages("devtools")
-                        devtools::install_github("kbrulois/magic", ref = "magicBatch")
+        install.packages("devtools")
+        devtools::install_github("kbrulois/magic", ref = "magicBatch")
 

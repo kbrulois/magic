@@ -6,8 +6,11 @@ from sklearn.manifold.t_sne import _joint_probabilities, _joint_probabilities_nn
 from sklearn.decomposition import PCA
 from scipy.spatial.distance import squareform
 from sklearn.neighbors import NearestNeighbors
+from scipy.sparse.linalg import eigs
+from numpy.linalg import norm
 
-def magic(data, aff_mat_input, n_pca_components=20, random_pca=True, 
+
+def magic(data, aff_mat_input, n_pca_components=20, n_diffusion_components = 10, random_pca=True, 
           t=6, k=30, ka=10, epsilon=1, rescale=99):
 
     if not isinstance(aff_mat_input, pd.DataFrame):
@@ -18,8 +21,22 @@ def magic(data, aff_mat_input, n_pca_components=20, random_pca=True,
         affin_mat_input = aff_mat_input
 
     #run diffusion maps to get markov matrix
-    L = compute_markov(affin_mat_input, k=k, epsilon=epsilon, 
+    L, Wd = compute_markov(affin_mat_input, k=k, epsilon=epsilon, 
                        distance_metric='euclidean', ka=ka)
+                       
+    # Eigen value decomposition
+    D, V = eigs(L, k=n_diffusion_components, tol=1e-4, maxiter=1000)
+    D = np.real(D)
+    V = np.real(V)
+    inds = np.argsort(D)[::-1]
+    D = D[inds]
+    V = V[:, inds]
+    V = L.dot(V)
+
+    # Normalize
+    for i in range(V.shape[1]):
+        V[:, i] = V[:, i] / norm(V[:, i])
+    V = np.round(V, 10)
 
     #remove tsne kernel for now
     # else:
@@ -37,7 +54,7 @@ def magic(data, aff_mat_input, n_pca_components=20, random_pca=True,
     #get imputed data matrix -- by default use data_norm but give user option to pick
     new_data, L_t = impute_fast(data, L, t, rescale_percent=rescale)
 
-    return new_data
+    return new_data, L_t, L, V, Wd
 
 
 def run_pca(data, n_components=100, random=True):
@@ -119,12 +136,12 @@ def compute_markov(data, k=10, epsilon=1, distance_metric='euclidean', ka=0):
         dists[inds] = distances[i, :]
         location += k
     if epsilon > 0:
-        W = csr_matrix( (dists, (rows, cols)), shape=[N, N] )
+        Wd = csr_matrix( (dists, (rows, cols)), shape=[N, N] )
     else:
-        W = csr_matrix( (np.ones(dists.shape), (rows, cols)), shape=[N, N] )
+        Wd = csr_matrix( (np.ones(dists.shape), (rows, cols)), shape=[N, N] )
 
     # Symmetrize W
-    W = W + W.T
+    W = Wd + Wd.T
 
     if epsilon > 0:
         # Convert to affinity (with selfloops)
@@ -141,7 +158,7 @@ def compute_markov(data, k=10, epsilon=1, distance_metric='euclidean', ka=0):
     #markov normalization
     T = csr_matrix((D, (range(N), range(N))), shape=[N, N]).dot(W)
 
-    return T
+    return T, Wd
 
 
 def optimal_t(data, th=0.001):

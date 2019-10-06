@@ -239,8 +239,6 @@ class SCData:
 
     @property
     def diffusion_eigenvectors(self):
-        if self._diffusion_eigenvectors != None:
-            return self._data['diffusion_eigenvectors']
         return self._diffusion_eigenvectors
 
     @diffusion_eigenvectors.setter
@@ -1148,16 +1146,23 @@ class SCData:
         return fig, axes
 
 
-    def run_magic(self, aff_mat_input=None, n_pca_components=20, random_pca=True, t=6, k=30, ka=10, epsilon=1, rescale_percent=99):
+    def run_magic(self, aff_mat_input=None, n_pca_components=20, random_pca=True, t=6, k=30, ka=10, epsilon=1, n_diffusion_components=10, rescale_percent=99, output_file3 = None):
 
-        new_data = magic.MAGIC_core.magic(self.data.values, aff_mat_input=aff_mat_input, n_pca_components=n_pca_components, random_pca=random_pca, t=t, 
+        new_data, L_t, L, V, Wd = magic.MAGIC_core.magic(self.data.values, aff_mat_input=aff_mat_input, n_pca_components=n_pca_components, n_diffusion_components=n_diffusion_components, random_pca=random_pca, t=t, 
                                      k=k, ka=ka, epsilon=epsilon, rescale=rescale_percent)
 
         new_data = pd.DataFrame(new_data, index=self.data.index, columns=['MAGIC ' + gene for gene in self.data.columns.values])
-
+        
+        L_t = pd.DataFrame(L_t, index=self.data.index)
+        
+        L = pd.DataFrame(L.todense(), index=self.data.index)
+        L.to_csv(path_or_buf=output_file3)
+        
         # Construct class object
         scdata = magic.mg.SCData(new_data, data_type=self.data_type, data_prefix='MAGIC ')
         self.magic = scdata
+        self.extended_data = pd.DataFrame(V, index=self.data.index,
+                                                   columns=[self._data_prefix + 'DC'+str(i) for i in range(n_diffusion_components)])
 
     def concatenate_data(self, other_data_sets, join='outer', axis=0, names=[]):
 
